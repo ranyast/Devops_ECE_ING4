@@ -17,6 +17,21 @@ module.exports = {
       callback(null, res) // Return callback
     })
   },
+  get(username, callback) {
+    if (!username) return callback(new Error("Username is required"), null)
+
+    // hgetall permet de récupérer toutes les propriétés de l'objet stocké dans Redis
+    db.hgetall(username, (err, res) => {
+      if (err) return callback(err, null)
+      if (res) {
+        // On rajoute le username dans l'objet car il n'est pas stocké dans les champs du hash
+        res.username = username
+        callback(null, res)
+      } else {
+        callback(new Error("User not found"), null)
+      }
+    })
+  }
   // get: (username, callback) => {
   //   // TODO create this method
   // }

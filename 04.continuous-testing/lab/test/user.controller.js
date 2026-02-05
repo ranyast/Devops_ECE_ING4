@@ -44,6 +44,33 @@ describe('User', () => {
   })
 
   // TODO Create test for the get method
+  describe('get', () => {
+    it('get a user by username', (done) => {
+      const user = {
+        username: 'sergkudinov',
+        firstname: 'sergei',
+        lastname: 'kudinov'
+      }
+      // On crée l'utilisateur d'abord
+      userController.create(user, (err, result) => {
+        // On essaie de le récupérer
+        userController.get(user.username, (err, result) => {
+          expect(err).to.be.null
+          expect(result).to.deep.equal(user)
+          done()
+        })
+      })
+    })
+
+    it('cannot get a user when it does not exist', (done) => {
+      userController.get('non_existent_user', (err, result) => {
+        expect(err).to.not.be.null
+        expect(result).to.be.null
+        done()
+      })
+    })
+  })
+
   // describe('Get', ()=> {
   //   
   //   it('get a user by username', (done) => {

@@ -24,5 +24,26 @@ const server = app.listen(port, (err) => {
   console.log("Server listening the port " + port)
 })
 
+const expressSwagger = require('express-swagger-generator')(app);
+
+let options = {
+  swaggerDefinition: {
+    info: {
+      description: 'User API documentation',
+      title: 'User API',
+      version: '1.0.0',
+    },
+    host: 'localhost:3000',
+    basePath: '/',
+    produces: [
+      "application/json"
+    ],
+    schemes: ['http'],
+  },
+  basedir: __dirname, // Dossier de base
+  files: ['./routes/**/*.js'] // Chemin vers tes fichiers de routes pour extraire la doc
+};
+expressSwagger(options);
+
 
 module.exports = server
