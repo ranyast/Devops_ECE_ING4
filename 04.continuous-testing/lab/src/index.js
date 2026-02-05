@@ -38,8 +38,7 @@ let options = {
 expressSwagger(options);
 // --- FIN CONFIG SWAGGER ---
 
-app.get('/', (req, res) => res.send('Hello World!'))
-
+app.get('/', (req, res) => res.send('TP DevOps terminé avec succès par Ranya & Antoine'))
 app.use('/user', userRouter)
 
 const server = app.listen(port, (err) => {
