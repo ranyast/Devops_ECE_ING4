@@ -1,0 +1,47 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          # Important : on spécifie où se trouve le package-lock.json pour le cache
+          cache-dependency-path: 04.continuous-testing/lab/package-lock.json
+
+      - name: Install dependencies
+        # On change de répertoire avant d'exécuter la commande
+        working-directory: ./04.continuous-testing/lab
+        run: npm install
+
+      - name: Run tests
+        # Pareil ici, on exécute les tests dans le bon dossier
+        working-directory: ./04.continuous-testing/lab
+        run: npm test
